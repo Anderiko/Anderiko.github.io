@@ -27,6 +27,7 @@ html, body {
 
 h1 {
     text-align: center;
+    font-weight: bolder;
     color: #fff;
 }
 
@@ -98,5 +99,5 @@ body {
         margin: 1em;
     }
 
-    
+
 }
