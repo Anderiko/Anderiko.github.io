@@ -1,0 +1,86 @@
+@font-face {
+    font-family: "Nunito";
+    src: url('../fonts/Nunito/Nunito-Light.ttf');
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: "Nunito";
+    src: url('../fonts/Nunito/Nunito-Regular.ttf');
+}
+
+@font-face {
+    font-family: "Nunito";
+    src: url('../fonts/Nunito/Nunito-SemiBold.ttf');
+    font-weight: bold;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+}
+
+h3 {
+    margin: 2em 5em;
+    color: #fff;
+}
+
+hr {
+    text-align: center;
+    width: 80%;
+}
+
+ul {
+    list-style-type: none;
+    margin: 1em 5em;
+    padding: 0;
+}
+
+li {
+    margin: 1em;
+    width: 300px;
+    font-size: 20px;
+    transition: .3s;
+}
+
+li:hover {
+    background-color: #ddd;
+}
+
+li:hover a {
+    color: #222;
+}
+
+li a {
+    display: block;
+    padding: 1em;
+    color: #fff;
+    text-decoration: none;
+    width: inherit;
+    height: inherit;
+
+}
+
+.particles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1000;
+}
+
+body {
+    background-color: #222;
+    overflow: hidden;
+}
