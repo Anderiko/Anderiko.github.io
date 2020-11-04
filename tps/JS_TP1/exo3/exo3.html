@@ -1,0 +1,21 @@
+<html>
+	<head>
+	<script type="text/javascript">
+		function init()
+		{
+			laDiv1=document.createElement('div');
+			laDiv2=document.getElementById('div2');
+			//document.querySelector / querySelectorAll -> n'importe quel selecteur css
+
+			laDiv1.setAttribute('id','div1');
+			laDiv1.setAttribute('style',"border-color:red; border-style: dotted;");
+			laDiv1.innerHTML = '<p>Texte</p>'
+			laDiv2.appendChild(laDiv1);
+		}
+	</script>
+	</head>
+	<body onload='init()'>
+		<div id='div2' style="border-color:black; border-style: solid;"></div>
+		<a href="/tps/JS_TP1/">Retour - Exercices</a>
+	</body>
+</html>

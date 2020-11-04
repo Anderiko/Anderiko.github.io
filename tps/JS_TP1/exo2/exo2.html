@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<script type="text/javascript">
+			var a = 1;
+			var b = "x";
+			c = 3;
+			function fonction1()
+			{
+				var a = 2; //Variable redéfinie
+				b = 3; //Varaible redéfinie car au dessus var b
+				c = 1; //Variable redéfinie LOCALEMENT
+				alert("fonction1: a vaut "+a+", b vaut "+b+" et c vaut "+c); 
+			}
+			function fonction2(d)
+			{
+				alert("fonction2 :a vaut "+a+", b vaut "+b+", c vaut "+c+" et d vaut "+d);
+			}
+			fonction1();
+			fonction2(a);
+		</script>
+	</head>
+	<body>
+		<a href="/tps/JS_TP1/">Retour - Exercices</a>
+	</body>
+</html>

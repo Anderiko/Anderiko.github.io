@@ -25,6 +25,11 @@ html, body {
     box-sizing: border-box;
 }
 
+body {
+    background-color: #222;
+    overflow: hidden;
+}
+
 h1 {
     text-align: center;
     font-weight: bolder;
@@ -48,7 +53,7 @@ ul {
 }
 
 li {
-    max-width: 300px;
+    max-width: 400px;
     font-size: 20px;
     transition: .3s;
 }
@@ -57,12 +62,42 @@ li:hover {
     background-color: #ddd;
 }
 
+li:hover.disabled {
+    background-color: #aaa;
+    cursor: not-allowed!important;
+}
+
 li:hover a {
     color: #222;
 }
 
+li:hover.disabled a {
+    cursor: not-allowed!important;
+}
+
+li:hover.void {
+    background-color: transparent;
+}
+
+li i {
+    width: 0;
+    overflow: hidden;
+    transition: .3s;
+}
+
+li i::before, li i::after {
+    margin: 0;
+}
+
+li:hover i {
+    width: 20px;
+    margin-right: 1em;
+}
+
 li a {
-    display: block;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     padding: 1em;
     color: #fff;
     text-decoration: none;
@@ -78,11 +113,6 @@ li a {
     height: 100%;
     width: 100%;
     z-index: -1000;
-}
-
-body {
-    background-color: #222;
-    overflow: hidden;
 }
 
 @media (max-width: 992px) {
