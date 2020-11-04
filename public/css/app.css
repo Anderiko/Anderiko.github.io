@@ -30,6 +30,17 @@ body {
     overflow: hidden;
 }
 
+main {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col {
+    flex-basis: 0;
+    flex-grow: 1;
+    max-width: 100%;
+}
+
 h1 {
     text-align: center;
     font-weight: bolder;
