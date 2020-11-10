@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <title>Technos WEB ENSSAT - TP JS #2</title>
+
+    <link rel="stylesheet" href="/public/dist/fontawesome/all.min.css">
+    <link rel="stylesheet" href="/public/css/animate.min.css">
+    <link rel="stylesheet" href="/public/css/app.css">
+
+    <link rel="stylesheet" href="timer.css">
+</head>
+<body style="background-color: #5d734b;">
+
+    <header>
+        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #2 - Exercice 5</h1>
+    </header>
+
+    <hr class="animate__animated animate__fadeIn" style="animation-delay: .5s;">
+
+    <main>
+        <div class="col menu">
+
+            <h3 class="animate__animated animate__fadeIn" style="animation-delay: .75s;">Commandes :</h3>
+
+            <ul>
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.2s;">
+                    <a href="/tps/JS_TP2/index.html"><i class="fad fa-undo"></i> Retour - JS #2</a>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="col" style="display: flex; justify-content: center; align-items: center;">
+            <canvas id="canvas" width="250px" height="250px"></canvas>
+        </div>
+    </main>
+
+    <div id="particles-js" class="particles-container"></div>
+
+    <script src="/public/js/particles.min.js"></script>
+    <script src="/public/js/part.js"></script>
+
+    <script>
+        let Square = function (width, height, ctx, x, y, timeout){
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.ctx = ctx;
+            this.timeout = timeout;
+            
+            this.draw = function ()
+            {
+                ctx.fillStyle = "red";
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            };
+
+            this.clear = function ()
+            {
+                ctx.clearRect(this.x, this.y, this.width, this.height);
+            };
+
+            this.moving = function ()
+            {
+                let moving = setInterval(() => {
+
+                    this.clear();
+
+                    this.x += 10;
+
+                    this.draw();
+
+                    if (this.x + this.width >= canvas.width - 10) clearInterval(moving);
+
+                }, 100);
+            };
+
+            this.start = function ()
+            {
+                this.draw();
+
+                setTimeout(() => {
+                    this.moving();
+                }, this.timeout);
+            }
+
+            this.start();
+        }
+
+        let canvas = document.querySelector('#canvas');
+        let ctx = canvas.getContext("2d");
+        
+
+        function drawInit() 
+        {
+            ctx.strokeStyle = "white";
+            ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        }
+
+        
+
+        window.addEventListener('load', (event) => {
+            drawInit();
+
+            for(let i = 0; i < 10; i++)
+            {
+                let square = new Square(10, 10, ctx, 10 , 10 + i * 15, 1000 * i);
+            }
+
+        });
+    </script>
+</body>
+</html>
