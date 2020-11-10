@@ -86,6 +86,7 @@
 
         function resetTimer()
         {
+            if (typeof timer == 'undefined') return;
             clearInterval(timer);
             time = 10;
             timerDisplay.innerHTML = time;
