@@ -15,7 +15,7 @@
 <body style="background-color: #5d734b;">
 
     <header>
-        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #2 - Exercice 3</h1>
+        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #2 - Exercice 4</h1>
     </header>
 
     <hr class="animate__animated animate__fadeIn" style="animation-delay: .5s;">
@@ -61,24 +61,23 @@
             {
                 ctx.clearRect(this.x, this.y, this.width, this.height);
             };
+
+            this.draw();
         }
 
         let canvas = document.querySelector('#canvas');
         let ctx = canvas.getContext("2d");
-        let moving;
-        let square = new Square(25, 25, ctx, 10, 10);
+        
 
         function drawInit() 
         {
-            square.draw();
-
             ctx.strokeStyle = "white";
             ctx.strokeRect(0, 0, canvas.width, canvas.height);
         }
 
-        function moveToRight()
+        function moving (square)
         {
-            moving = setInterval(() => {
+            let moving = setInterval(() => {
 
                 square.clear();
 
@@ -94,11 +93,14 @@
         window.addEventListener('load', (event) => {
             drawInit();
 
-            setTimeout(() => {
+            let square1 = new Square(25, 25, ctx, 10, 10);
+            let square2 = new Square(25, 25, ctx, 10, 40);
+            let square3 = new Square(25, 25, ctx, 10, 70);
 
-                moveToRight();
-                
-            }, 2000);
+            setTimeout(() => moving(square1), 1000);
+            setTimeout(() => moving(square2), 2000);
+            setTimeout(() => moving(square3), 3000);
+
         });
     </script>
 </body>
