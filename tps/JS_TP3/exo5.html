@@ -25,14 +25,18 @@
 
             <ul>
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1s;">
-                    <a href="#" id="startSquare"><i class="fad fa-caret-square-right"></i> Jouer l'animation</a>
+                    <a href="#" id="sonicIdle"><i class="fad fa-pause-circle"></i> Super Sonic Idle</a>
                 </li>
 
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.1s;">
-                    <a href="#" id="resetSquare"><i class="fad fa-caret-square-left"></i> Réinitialiser</a>
+                    <a href="#" id="toSuperSonic"><i class="fad fa-level-up-alt"></i> Super Sonic</a>
                 </li>
 
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.2s;">
+                    <a href="#" id="toSonic"><i class="fad fa-level-down-alt"></i> Sonic</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.3s;">
                     <a href="/tps/JS_TP3/index.html"><i class="fad fa-undo"></i> Retour - JS #3</a>
                 </li>
             </ul>
@@ -53,7 +57,82 @@
 
         let canvas = document.querySelector('#canvas');
         let ctx = canvas.getContext("2d");
+        ctx.imageSmoothingEnabled = false;
 
+        let Sprites = function (width, height, originOffsetX, originOffsetY, spriteNumber, scale, animationSpeed, srcPath, ctx)
+        {
+            this.ctx = ctx;
+
+            this.width = width;
+            this.height = height;
+
+            this.originOffsetX = originOffsetX;
+            this.originOffsetY = originOffsetY;
+
+            this.scale = scale;
+            this.spriteNumber = spriteNumber;
+            this.animationSpeed = animationSpeed;
+
+            this.sprites = new Image();
+            this.sprites.src = srcPath;
+
+            this.draw = function (animationStep, x, y)
+            {
+                ctx.drawImage(
+                    this.sprites,
+                    this.width * animationStep, 0, this.width, this.height,
+                    x - this.originOffsetX * this.scale, y - this.originOffsetY * this.scale, this.width * this.scale, this.height * this.scale
+                );
+            };
+
+            this.toString = function ()
+            {
+                return this.sprites.src;
+            };
+        }
+
+
+        let game;
+        let gameOver = false;
+
+        let state = {
+            idle:    new Sprites(40, 50, 20, 46, 2, 3, .05, "_superSonicIdle.png", ctx),
+            toSonic: new Sprites(40, 50, 20, 46, 20, 3, .15, "_superToSonic.png", ctx),
+            toSuper: new Sprites(40, 50, 20, 46, 11, 3, .1, "_sonicToSuper.png", ctx)
+        };
+
+        let currentState = state.toSuper;
+        let animationStep = 0;
+
+        function draw()
+        {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            currentState.draw(Math.floor(animationStep), 125, 240);
+        }
+
+        function update()
+        {
+            animationStep += currentState.animationSpeed;
+            
+            if (animationStep > currentState.spriteNumber)
+            {
+                switch (currentState)
+                {
+                    case state.idle:
+                        animationStep -= currentState.spriteNumber;
+                        break;
+                    
+                    case state.toSuper:
+                        animationStep = 0;
+                        currentState = state.idle;
+                        break;
+                    
+                    case state.toSonic:
+                        animationStep = currentState.spriteNumber - 1;
+                        break;
+                }
+            }
+        }
 
         function animate()
         {
@@ -66,12 +145,24 @@
         }
 
 
-        window.addEventListener('load', (event) => drawCanvas());
+        window.addEventListener('load', (event) => animate());
 
-        document.querySelector('#startSquare').addEventListener('click', (event) => {
+        document.querySelector('#sonicIdle').addEventListener('click', (event) => {
             event.preventDefault();
-            reset();
-            start();
+            animationStep = 0;
+            currentState = state.idle;
+        });
+
+        document.querySelector('#toSuperSonic').addEventListener('click', (event) => {
+            event.preventDefault();
+            animationStep = 0;
+            currentState = state.toSuper;
+        });
+
+        document.querySelector('#toSonic').addEventListener('click', (event) => {
+            event.preventDefault();
+            animationStep = 0;
+            currentState = state.toSonic;
         });
     </script>
 </body>
