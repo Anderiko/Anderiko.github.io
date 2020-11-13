@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <title>Technos WEB ENSSAT - TP JS #3</title>
+
+    <link rel="stylesheet" href="/public/dist/fontawesome/all.min.css">
+    <link rel="stylesheet" href="/public/css/animate.min.css">
+    <link rel="stylesheet" href="/public/css/app.css">
+</head>
+<body style="background-color: #915c26;">
+
+    <header>
+        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #3 - Exercice 3</h1>
+    </header>
+
+    <hr class="animate__animated animate__fadeIn" style="animation-delay: .5s;">
+
+    <main>
+        <div class="col menu">
+
+            <h3 class="animate__animated animate__fadeIn" style="animation-delay: .75s;">Commandes :</h3>
+
+            <ul>
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1s;">
+                    <a href="#" id="startSquare"><i class="fad fa-caret-square-right"></i> Déplacer le carré avec 0ms</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.1s;">
+                    <a href="#" id="startSquare33"><i class="fad fa-caret-square-right"></i> Déplacer le carré avec 33ms</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.2s;">
+                    <a href="#" id="startSquare100"><i class="fad fa-caret-square-right"></i> Déplacer le carré avec 100ms</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.3s;">
+                    <a href="#" id="resetSquare"><i class="fad fa-caret-square-left"></i> Réinitialiser</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.4s;">
+                    <a href="/tps/JS_TP3/index.html"><i class="fad fa-undo"></i> Retour - JS #3</a>
+                </li>
+            </ul>
+
+        </div>
+
+        <div class="col" style="display: flex; justify-content: center; align-items: center;">
+            <canvas id="canvas" width="250px" height="250px"></canvas>
+        </div>
+    </main>
+
+    <div id="particles-js" class="particles-container"></div>
+
+    <script src="/public/js/particles.min.js"></script>
+    <script src="/public/js/part.js"></script>
+
+    <script>
+
+        let Square = function (width, height, ctx, x, y){
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.ctx = ctx;
+            
+            this.draw = function ()
+            {
+                ctx.fillStyle = "red";
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            };
+        }
+
+        let canvas = document.querySelector('#canvas');
+        let ctx = canvas.getContext("2d");
+        let game;
+        let square = new Square(10, 10, ctx, 10, 10);
+        let pause = 0;
+        let lastFrame;
+
+        function clearCanvas()
+        {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawCanvas() 
+        {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = "white";
+            ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function render(deltaTime)
+        {
+            clearCanvas();
+            drawCanvas();
+
+            square.draw();
+        }
+
+        function animate()
+        {
+            let cancel = false;
+
+            let deltaTime = new Date() - lastFrame;
+
+            square.x += deltaTime;
+
+            render(deltaTime);
+
+            if (square.x + deltaTime >= canvas.width - 10) cancel = true;
+
+            if (cancel) return cancelAnimationFrame(game);
+
+            game = requestAnimationFrame(animate);
+            
+            lastFrame = new Date();
+
+            pausecomp(pause);
+        }
+
+        function pausecomp(millis) 
+		{
+			var date = new Date();
+			var curDate = null;
+			do { 
+				curDate = new Date(); 
+			} while(curDate-date < millis);
+        } 
+
+        function start(time = 0)
+        {
+            pause = time;
+            lastFrame = new Date();
+            game = requestAnimationFrame(animate);
+
+            animate();
+        }
+        function reset()
+        {
+            cancelAnimationFrame(game);
+
+            square.x = 10;
+
+            render();
+        }
+        
+        window.addEventListener('load', (event) => drawCanvas());
+
+        document.querySelector('#startSquare').addEventListener('click', (event) => {
+            event.preventDefault();
+            reset();
+            start();
+        });
+
+        document.querySelector('#startSquare33').addEventListener('click', (event) => {
+            event.preventDefault();
+            reset();
+            start(33);
+        });
+
+        document.querySelector('#startSquare100').addEventListener('click', (event) => {
+            event.preventDefault();
+            reset();
+            start(100);
+        });
+
+        document.querySelector('#resetSquare').addEventListener('click', (event) => {
+            event.preventDefault();
+            reset();
+        });
+    </script>
+</body>
+</html>

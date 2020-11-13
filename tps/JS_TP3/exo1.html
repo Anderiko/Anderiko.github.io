@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-    <title>Technos WEB ENSSAT - TP JS #2</title>
+    <title>Technos WEB ENSSAT - TP JS #3</title>
 
     <link rel="stylesheet" href="/public/dist/fontawesome/all.min.css">
     <link rel="stylesheet" href="/public/css/animate.min.css">
     <link rel="stylesheet" href="/public/css/app.css">
 </head>
-<body style="background-color: #5d734b;">
+<body style="background-color: #915c26;">
 
     <header>
-        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #2 - Exercice 2</h1>
+        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #3 - Exercice 1</h1>
     </header>
 
     <hr class="animate__animated animate__fadeIn" style="animation-delay: .5s;">
@@ -25,15 +25,23 @@
 
             <ul>
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1s;">
-                    <a href="#" id="startSquare"><i class="fad fa-caret-square-right"></i> Bouger le carré</a>
+                    <a href="#" id="startSquare"><i class="fad fa-caret-square-right"></i> Déplacer le carré avec 0ms</a>
                 </li>
 
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.1s;">
-                    <a href="#" id="resetSquare"><i class="fad fa-caret-square-left"></i> Réinitialiser</a>
+                    <a href="#" id="startSquare33"><i class="fad fa-caret-square-right"></i> Déplacer le carré avec 33ms</a>
                 </li>
 
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.2s;">
-                    <a href="/tps/JS_TP2/index.html"><i class="fad fa-undo"></i> Retour - JS #2</a>
+                    <a href="#" id="startSquare100"><i class="fad fa-caret-square-right"></i> Déplacer le carré avec 100ms</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.3s;">
+                    <a href="#" id="resetSquare"><i class="fad fa-caret-square-left"></i> Réinitialiser</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.4s;">
+                    <a href="/tps/JS_TP3/index.html"><i class="fad fa-undo"></i> Retour - JS #3</a>
                 </li>
             </ul>
 
@@ -50,6 +58,7 @@
     <script src="/public/js/part.js"></script>
 
     <script>
+
         let Square = function (width, height, ctx, x, y){
             this.x = x;
             this.y = y;
@@ -72,7 +81,7 @@
         let canvas = document.querySelector('#canvas');
         let ctx = canvas.getContext("2d");
         let moving;
-        let square = new Square(25, 25, ctx, 10, 10);
+        let square = new Square(10, 10, ctx, 10, 10);
 
         function drawInit() 
         {
@@ -82,7 +91,7 @@
             ctx.strokeRect(0, 0, canvas.width, canvas.height);
         }
 
-        function moveToRight()
+        function moveToRight(pauseTime = 0)
         {
             moving = setInterval(() => {
 
@@ -94,7 +103,9 @@
 
                 if (square.x + square.width >= canvas.width - 10) clearInterval(moving);
 
-            }, 100);
+                pausecomp(pauseTime);
+
+            }, 16);
         }
 
         function reset()
@@ -106,12 +117,33 @@
             square.draw();
         }
 
+        function pausecomp(millis) 
+		{
+			var date = new Date();
+			var curDate = null;
+			do { 
+				curDate = new Date(); 
+			} while(curDate-date < millis);
+        } 
+        
         window.addEventListener('load', (event) => drawInit());
 
         document.querySelector('#startSquare').addEventListener('click', (event) => {
             event.preventDefault();
             reset();
             moveToRight();
+        });
+
+        document.querySelector('#startSquare33').addEventListener('click', (event) => {
+            event.preventDefault();
+            reset();
+            moveToRight(33);
+        });
+
+        document.querySelector('#startSquare100').addEventListener('click', (event) => {
+            event.preventDefault();
+            reset();
+            moveToRight(100);
         });
 
         document.querySelector('#resetSquare').addEventListener('click', (event) => {

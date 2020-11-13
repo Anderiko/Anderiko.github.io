@@ -101,8 +101,8 @@ li i::before, li i::after {
 }
 
 li:hover i {
-    width: 20px;
-    margin-right: 1em;
+    width: 25px;
+    margin-right: .5em;
 }
 
 li a {
