@@ -13,7 +13,7 @@
 <body style="background-color: #915c26;">
 
     <header>
-        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #3 - Exercice 2</h1>
+        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #3 - Exercice 1</h1>
     </header>
 
     <hr class="animate__animated animate__fadeIn" style="animation-delay: .5s;">
@@ -41,7 +41,7 @@
                 </li>
 
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.4s;">
-                    <a href="/tps/JS_TP3/index.html"><i class="fad fa-undo"></i> Retour - JS #3</a>
+                    <a href="/tps/JS_TP3/part1/index.html"><i class="fad fa-undo"></i> Retour - JS #3 - Partie 1</a>
                 </li>
             </ul>
 
@@ -85,8 +85,6 @@
 
         function drawInit() 
         {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             square.draw();
 
             ctx.strokeStyle = "white";
@@ -95,30 +93,24 @@
 
         function moveToRight(pauseTime = 0)
         {
-            let lastFrame = new Date();
-
             moving = setInterval(() => {
 
                 square.clear();
 
-                square.x += new Date() - lastFrame;
+                square.x += 10;
 
                 square.draw();
 
                 if (square.x + square.width >= canvas.width - 10) clearInterval(moving);
 
-                lastFrame = new Date();
-
                 pausecomp(pauseTime);
+
             }, 16);
         }
 
         function reset()
         {
             clearInterval(moving);
-
-            drawInit();
-
             square.clear();
             square.x = 10;
             square.y = 10;

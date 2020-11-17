@@ -13,7 +13,7 @@
 <body style="background-color: #915c26;">
 
     <header>
-        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #3 - Exercice 1</h1>
+        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #3 - Exercice 3</h1>
     </header>
 
     <hr class="animate__animated animate__fadeIn" style="animation-delay: .5s;">
@@ -41,7 +41,7 @@
                 </li>
 
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.4s;">
-                    <a href="/tps/JS_TP3/index.html"><i class="fad fa-undo"></i> Retour - JS #3</a>
+                    <a href="/tps/JS_TP3/part1/index.html"><i class="fad fa-undo"></i> Retour - JS #3 - Partie 1</a>
                 </li>
             </ul>
 
@@ -71,50 +71,55 @@
                 ctx.fillStyle = "red";
                 ctx.fillRect(this.x, this.y, this.width, this.height);
             };
-
-            this.clear = function ()
-            {
-                ctx.clearRect(this.x, this.y, this.width, this.height);
-            };
         }
 
         let canvas = document.querySelector('#canvas');
         let ctx = canvas.getContext("2d");
-        let moving;
+        let game;
         let square = new Square(10, 10, ctx, 10, 10);
+        let pause = 0;
+        let lastFrame;
 
-        function drawInit() 
+        function clearCanvas()
         {
-            square.draw();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawCanvas() 
+        {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             ctx.strokeStyle = "white";
             ctx.strokeRect(0, 0, canvas.width, canvas.height);
         }
 
-        function moveToRight(pauseTime = 0)
+        function render(deltaTime)
         {
-            moving = setInterval(() => {
+            clearCanvas();
+            drawCanvas();
 
-                square.clear();
-
-                square.x += 10;
-
-                square.draw();
-
-                if (square.x + square.width >= canvas.width - 10) clearInterval(moving);
-
-                pausecomp(pauseTime);
-
-            }, 16);
+            square.draw();
         }
 
-        function reset()
+        function animate()
         {
-            clearInterval(moving);
-            square.clear();
-            square.x = 10;
-            square.y = 10;
-            square.draw();
+            let cancel = false;
+
+            let deltaTime = new Date() - lastFrame;
+
+            square.x += deltaTime;
+
+            render(deltaTime);
+
+            if (square.x + deltaTime >= canvas.width - 10) cancel = true;
+
+            if (cancel) return cancelAnimationFrame(game);
+
+            game = requestAnimationFrame(animate);
+            
+            lastFrame = new Date();
+
+            pausecomp(pause);
         }
 
         function pausecomp(millis) 
@@ -125,25 +130,42 @@
 				curDate = new Date(); 
 			} while(curDate-date < millis);
         } 
+
+        function start(time = 0)
+        {
+            pause = time;
+            lastFrame = new Date();
+            game = requestAnimationFrame(animate);
+
+            animate();
+        }
+        function reset()
+        {
+            cancelAnimationFrame(game);
+
+            square.x = 10;
+
+            render();
+        }
         
-        window.addEventListener('load', (event) => drawInit());
+        window.addEventListener('load', (event) => drawCanvas());
 
         document.querySelector('#startSquare').addEventListener('click', (event) => {
             event.preventDefault();
             reset();
-            moveToRight();
+            start();
         });
 
         document.querySelector('#startSquare33').addEventListener('click', (event) => {
             event.preventDefault();
             reset();
-            moveToRight(33);
+            start(33);
         });
 
         document.querySelector('#startSquare100').addEventListener('click', (event) => {
             event.preventDefault();
             reset();
-            moveToRight(100);
+            start(100);
         });
 
         document.querySelector('#resetSquare').addEventListener('click', (event) => {

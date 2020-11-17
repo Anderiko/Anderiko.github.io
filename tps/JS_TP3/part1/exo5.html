@@ -37,7 +37,7 @@
                 </li>
 
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.3s;">
-                    <a href="/tps/JS_TP3/index.html"><i class="fad fa-undo"></i> Retour - JS #3</a>
+                    <a href="/tps/JS_TP3/part1/index.html"><i class="fad fa-undo"></i> Retour - JS #3 - Partie 1</a>
                 </li>
             </ul>
 
@@ -59,38 +59,35 @@
         let ctx = canvas.getContext("2d");
         ctx.imageSmoothingEnabled = false;
 
-        let Sprites = function (width, height, originOffsetX, originOffsetY, spriteNumber, scale, animationSpeed, srcPath, ctx)
+        class Sprites
         {
-            this.ctx = ctx;
+            constructor(width, height, originOffsetX, originOffsetY, spriteNumber, scale, animationSpeed, srcPath, ctx)
+            {
+                this.ctx = ctx;
 
-            this.width = width;
-            this.height = height;
+                this.width = width;
+                this.height = height;
 
-            this.originOffsetX = originOffsetX;
-            this.originOffsetY = originOffsetY;
+                this.originOffsetX = originOffsetX;
+                this.originOffsetY = originOffsetY;
 
-            this.scale = scale;
-            this.spriteNumber = spriteNumber;
-            this.animationSpeed = animationSpeed;
+                this.scale = scale;
+                this.spriteNumber = spriteNumber;
+                this.animationSpeed = animationSpeed;
 
-            this.sprites = new Image();
-            this.sprites.src = srcPath;
+                this.sprites = new Image();
+                this.sprites.src = srcPath;
+            }
 
-            this.draw = function (animationStep, x, y)
+            draw(animationStep, x, y)
             {
                 ctx.drawImage(
                     this.sprites,
                     this.width * animationStep, 0, this.width, this.height,
                     x - this.originOffsetX * this.scale, y - this.originOffsetY * this.scale, this.width * this.scale, this.height * this.scale
                 );
-            };
-
-            this.toString = function ()
-            {
-                return this.sprites.src;
-            };
+            }
         }
-
 
         let game;
         let gameOver = false;
@@ -143,7 +140,6 @@
 
             game = requestAnimationFrame(animate);
         }
-
 
         window.addEventListener('load', (event) => animate());
 

@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <title>Technos WEB ENSSAT - TP JS #3</title>
+
+    <link rel="stylesheet" href="/public/dist/fontawesome/all.min.css">
+    <link rel="stylesheet" href="/public/css/animate.min.css">
+    <link rel="stylesheet" href="/public/css/app.css">
+</head>
+<body style="background-color: #915c26;">
+
+    <header>
+        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS #3 - Partie 2</h1>
+    </header>
+
+    <hr class="animate__animated animate__fadeIn" style="animation-delay: .5s;">
+
+    <main>
+        <div class="col menu">
+
+            <h3 class="animate__animated animate__fadeIn" style="animation-delay: .75s;">Contrôles :</h3>
+
+            <ul>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1s;">
+                    <a href="#" id="up"><i class="fad fa-arrow-square-up"></i> Monter</a>
+                </li>
+                
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.1s;">
+                    <a href="#" id="down"><i class="fad fa-arrow-square-down"></i> Descendre</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.2s;">
+                    <a href="#" id="right"><i class="fad fa-arrow-square-right"></i> Aller a droite</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.3s;">
+                    <a href="#" id="left"><i class="fad fa-arrow-square-left"></i> Aller a gauche</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.4s;">
+                    <a href="#" id="stop"><i class="fad fa-backspace"></i> Arreter</a>
+                </li>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.5s;">
+                    <a href="/tps/JS_TP3/index.html"><i class="fad fa-arrow-left"></i> Retour - TP JS #3</a>
+                </li>
+                
+            </ul>
+        </div>
+
+        <div class="col" style="display: flex; justify-content: center; align-items: center; padding: 1em;">
+            <canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
+        </div>
+    </main>
+
+    <div id="particles-js" class="particles-container"></div>
+
+    <script src="/public/js/particles.min.js"></script>
+    <script src="/public/js/part.js"></script>
+
+    <script>
+        let canvas = document.querySelector('#canvas');
+        
+        const { width, height } = canvas.getBoundingClientRect();
+
+        canvas.width = width;
+        canvas.height = height;
+
+        let ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+
+        class Sprites
+        {
+            constructor(width, height, originOffsetX, originOffsetY, spriteRowNumber, spriteNumber, scale, animationSpeed, srcPath, ctx)
+            {
+                this.ctx = ctx;
+
+                this.width = width;
+                this.height = height;
+
+                this.originOffsetX = originOffsetX;
+                this.originOffsetY = originOffsetY;
+                this.spriteRowNumber = spriteRowNumber;
+
+                this.scale = scale;
+                this.spriteNumber = spriteNumber;
+                this.animationSpeed = animationSpeed;
+
+                this.sprites = new Image();
+                this.sprites.src = srcPath;
+            }
+
+            draw(animationStep, x, y, scale = this.scale)
+            {
+                ctx.drawImage(
+                    this.sprites,
+                    this.width * animationStep, this.height * this.spriteRowNumber, this.width, this.height,
+                    x - this.originOffsetX * scale, y - this.originOffsetY * scale, this.width * scale, this.height * scale
+                );
+            }
+        }
+
+
+        let game;
+        let gameOver = false;
+
+        let posX = width / 2;
+        let posY = height / 2;
+
+        let state = {
+            idle:   new Sprites(128, 128, 64, 128, 0, 1, 1, 0, "batmanWalk.png", ctx),
+            up:     new Sprites(128, 128, 64, 128, 3, 4, 1, .1, "batmanWalk.png", ctx),
+            down:   new Sprites(128, 128, 64, 128, 2, 4, 1, .1, "batmanWalk.png", ctx),
+            left:   new Sprites(128, 128, 64, 128, 0, 4, 1, .1, "batmanWalk.png", ctx),
+            right:  new Sprites(128, 128, 64, 128, 1, 4, 1, .1, "batmanWalk.png", ctx)
+        };
+
+        let currentState = state.idle;
+        let animationStep = 0;
+        let speedHorizontal = 3;
+        let speedVertical = 1.5;
+        let depthFactor = 1;
+
+        function draw()
+        {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            currentState.draw(Math.floor(animationStep), posX, posY, depthFactor);
+        }
+
+        function update()
+        {
+            animationStep += currentState.animationSpeed;
+            
+            if (animationStep > currentState.spriteNumber)
+            {
+                if (currentState == state.idle) animationStep = 0;
+
+                animationStep -= currentState.spriteNumber;
+            }
+
+            switch (currentState)
+            {
+                case state.down:
+
+                    if (posY <= canvas.height) 
+                    {
+                        posY += speedVertical * depthFactor;
+                        depthFactor += .005;
+                    }
+                    else
+                    {
+                        animationStep = 1;
+                    }
+
+                    break;
+
+                case state.up:
+
+                    if (posY - state.up.height > 0)
+                    {
+                        posY -= speedVertical * depthFactor;
+                        depthFactor -= .005;
+                    }
+                    else
+                    {
+                        animationStep = 1;
+                    }
+
+                    break;
+
+                case state.left:
+
+                    if (posX - 32 > 0)
+                    {
+                        posX -= speedHorizontal * depthFactor;
+                    }
+                    else
+                    {
+                        animationStep = 0;
+                    }
+                    
+                    break;
+
+                case state.right:
+
+                    if (posX + 32 < canvas.width)
+                    {
+                        posX += speedHorizontal * depthFactor;
+                    }
+                    else
+                    {
+                        animationStep = 0;
+                    }
+                    
+                    break;
+
+                default:
+                    return;
+            }
+
+        }
+
+        function animate()
+        {
+            draw();
+            update();
+
+            if (gameOver) return cancelAnimationFrame(game);
+
+            game = requestAnimationFrame(animate);
+        }
+
+        window.addEventListener("keydown", (event) => {
+            if (event.defaultPrevented) return;
+
+            switch (event.key) 
+            {
+                case "s":
+                case "ArrowDown":
+                    currentState = state.down;
+                    break;
+
+                case "z":
+                case "ArrowUp":
+                    currentState = state.up;
+                    break;
+
+                case "q":
+                case "ArrowLeft":
+                    currentState = state.left;
+                    break;
+
+                case "d":
+                case "ArrowRight":
+                    currentState = state.right;
+                    break;
+
+                case "Escape":
+                    reset();
+                    break;
+
+                default:
+                    return;
+            }
+
+            event.preventDefault();
+        }, true);
+
+        function reset()
+        {
+            currentState = state.idle;
+            animationStep = 0;
+            posX = canvas.width / 2;
+            posY = canvas.height / 2;
+        }
+
+        animate();
+
+
+        document.querySelector('#stop').addEventListener('click', (event) => {
+            event.preventDefault();
+            reset();
+        });
+
+        document.querySelector('#up').addEventListener('click', (event) => {
+            event.preventDefault();
+            currentState = state.up;
+        });
+
+        document.querySelector('#down').addEventListener('click', (event) => {
+            event.preventDefault();
+            currentState = state.down;
+        });
+
+        document.querySelector('#left').addEventListener('click', (event) => {
+            event.preventDefault();
+            currentState = state.left;
+        });
+
+        document.querySelector('#right').addEventListener('click', (event) => {
+            event.preventDefault();
+            currentState = state.right;
+        });
+
+    </script>
+</body>
+</html>
