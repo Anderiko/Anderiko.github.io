@@ -109,11 +109,7 @@
         }
 
 
-        let game;
-        let gameOver = false;
-
-        let posX = width / 2;
-        let posY = height / 2;
+        
 
         let state = {
             idle:   new Sprites(128, 128, 64, 128, 0, 1, 1, 0, "batmanWalk.png", ctx),
@@ -122,6 +118,12 @@
             left:   new Sprites(128, 128, 64, 128, 0, 4, 1, .1, "batmanWalk.png", ctx),
             right:  new Sprites(128, 128, 64, 128, 1, 4, 1, .1, "batmanWalk.png", ctx)
         };
+
+        let game;
+        let gameOver = false;
+
+        let posX = width / 2;
+        let posY = height / 2;
 
         let currentState = state.idle;
         let animationStep = 0;
@@ -273,6 +275,7 @@
             posX = canvas.width / 2;
             posY = canvas.height / 2;
             isStopped = true;
+            depthFactor = 1;
         }
 
         animate();
