@@ -67,14 +67,11 @@
     <script src="/public/js/part.js"></script>
 
     <script>
+
         let canvas = document.querySelector('#canvas');
-        
-        const { width, height } = canvas.getBoundingClientRect();
 
-        const rect = canvas.getBoundingClientRect();
-
-        canvas.width = width;
-        canvas.height = height;
+        let rect;
+        let remapPosYToDepthFactor;
 
         let ctx = canvas.getContext('2d');
         ctx.imageSmoothingEnabled = false;
@@ -124,8 +121,8 @@
         let game;
         let gameOver = false;
 
-        let posX = width / 2;
-        let posY = height / 2;
+        let posX = canvas.width / 2;
+        let posY = canvas.height / 2;
 
         let currentState = state.idle;
         let animationStep = 0;
@@ -154,7 +151,7 @@
                 else
                 {
                     toPosX = -1;
-                    isStopped = true;
+                    if (toPosY == -1) isStopped = true;
                 }
             }
             
@@ -167,6 +164,7 @@
                 else
                 {
                     toPosY = -1;
+                    if (toPosX == -1) isStopped = true;
                 }
             }
             
@@ -186,7 +184,7 @@
                     if (posY <= canvas.height && !isStopped) 
                     {
                         posY += speedVertical * depthFactor;
-                        depthFactor += .005;
+                        depthFactor = remapPosYToDepthFactor(posY);
                     }
                     else
                     {
@@ -197,10 +195,10 @@
 
                 case state.up:
 
-                    if (posY - state.up.height > 0 && !isStopped)
+                    if (posY - state.up.height * depthFactor > 0 && !isStopped)
                     {
                         posY -= speedVertical * depthFactor;
-                        depthFactor -= .005;
+                        depthFactor = remapPosYToDepthFactor(posY);
                     }
                     else
                     {
@@ -274,11 +272,47 @@
                 toPosX = canvas.width - 33;
             }
 
-            if (mouseY - state.up.height < 0)
+            if (mouseY - state.up.height * depthFactor < 0)
             {
                 toPosY = state.up.height + 1;
             }
         }
+
+        function setCurrentState(currState)
+        {
+            clearMouseMovement();
+            currentState = currState;
+            isStopped = false;
+        }
+
+        function reset()
+        {
+            currentState = state.idle;
+            animationStep = 0;
+            posX = canvas.width / 2;
+            posY = canvas.height / 2;
+            isStopped = true;
+            depthFactor = 1;
+        }
+
+        function createRemap(inMin, inMax, outMin, outMax) {
+            return function remaper(x) {
+                return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+            };
+        }
+
+        window.addEventListener('load', () => {
+            rect = canvas.getBoundingClientRect();
+
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+
+            remapPosYToDepthFactor = createRemap(0, canvas.height, .5, 1.5);
+
+            reset();
+
+            animate();
+        });
 
         window.addEventListener("keydown", (event) => {
             if (event.defaultPrevented) return;
@@ -323,14 +357,6 @@
             event.preventDefault();
         }, true);
 
-        canvas.addEventListener('mouseup', (event) => {
-            if (event.defaultPrevented) return;
-
-            clampMouseClick(Math.floor(event.clientX - rect.left), Math.floor(event.clientY - rect.top));
-
-            event.preventDefault();
-        }, true);
-
         window.addEventListener("keyup", (event) => {
             if (event.defaultPrevented) return;
 
@@ -339,25 +365,13 @@
             event.preventDefault();
         }, true);
 
-        function setCurrentState(currState)
-        {
-            clearMouseMovement();
-            currentState = currState;
-            isStopped = false;
-        }
+        canvas.addEventListener('mouseup', (event) => {
+            if (event.defaultPrevented) return;
 
-        function reset()
-        {
-            currentState = state.idle;
-            animationStep = 0;
-            posX = canvas.width / 2;
-            posY = canvas.height / 2;
-            isStopped = true;
-            depthFactor = 1;
-        }
+            clampMouseClick(Math.floor(event.clientX - rect.left), Math.floor(event.clientY - rect.top));
 
-        animate();
-
+            event.preventDefault();
+        }, true);
 
         document.querySelector('#reset').addEventListener('click', (event) => {
             event.preventDefault();
@@ -388,7 +402,6 @@
             event.preventDefault();
             setCurrentState(state.right);
         });
-
     </script>
 </body>
 </html>
