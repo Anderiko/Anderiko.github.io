@@ -262,6 +262,14 @@
             event.preventDefault();
         }, true);
 
+        window.addEventListener("keyup", (event) => {
+            if (event.defaultPrevented) return;
+
+            isStopped = true;
+
+            event.preventDefault();
+        }, true);
+
         function setCurrentState(currState)
         {
             currentState = currState;
