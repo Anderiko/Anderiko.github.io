@@ -107,9 +107,6 @@
             }
         }
 
-
-        
-
         let state = {
             idle:   new Sprites(128, 128, 64, 128, 0, 1, 1, 0, "batmanWalk.png", ctx),
             up:     new Sprites(128, 128, 64, 128, 3, 4, 1, .1, "batmanWalk.png", ctx),
@@ -295,8 +292,10 @@
             depthFactor = 1;
         }
 
-        function createRemap(inMin, inMax, outMin, outMax) {
-            return function remaper(x) {
+        function createRemap(inMin, inMax, outMin, outMax) 
+        {
+            return function remaper(x) 
+            {
                 return (x - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
             };
         }
