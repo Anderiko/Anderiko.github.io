@@ -71,6 +71,8 @@
         
         const { width, height } = canvas.getBoundingClientRect();
 
+        const rect = canvas.getBoundingClientRect();
+
         canvas.width = width;
         canvas.height = height;
 
@@ -132,6 +134,9 @@
         let depthFactor = 1;
         let isStopped = true;
 
+        let toPosX = -1;
+        let toPosY = -1;
+
         function draw()
         {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -140,6 +145,31 @@
 
         function update()
         {
+            if (toPosX != -1)
+            {
+                if (Math.abs(toPosX - posX) > 2) 
+                {
+                    currentState = (Math.floor(posX) < toPosX) ? state.right : state.left;
+                }
+                else
+                {
+                    toPosX = -1;
+                    isStopped = true;
+                }
+            }
+            
+            if (toPosY != -1)
+            {
+                if (Math.abs(toPosY - posY) > 2) 
+                {
+                    currentState = (Math.floor(posY) < toPosY) ? state.down : state.up;
+                }
+                else
+                {
+                    toPosY = -1;
+                }
+            }
+            
             animationStep += currentState.animationSpeed;
             
             if (animationStep > currentState.spriteNumber)
@@ -221,8 +251,39 @@
             game = requestAnimationFrame(animate);
         }
 
+        function clearMouseMovement()
+        {
+            toPosX = -1;
+            toPosY = -1;
+            console.log("clear");
+        }
+
+        function clampMouseClick(mouseX, mouseY)
+        {
+            isStopped = false;
+
+            toPosX = mouseX;
+            toPosY = mouseY;
+
+            if (mouseX - 32 < 0)
+            {
+                toPosX = 33;
+            }
+            else if (mouseX + 32 > canvas.width)
+            {
+                toPosX = canvas.width - 33;
+            }
+
+            if (mouseY - state.up.height < 0)
+            {
+                toPosY = state.up.height + 1;
+            }
+        }
+
         window.addEventListener("keydown", (event) => {
             if (event.defaultPrevented) return;
+
+            clearMouseMovement();
 
             switch (event.key) 
             {
@@ -262,6 +323,14 @@
             event.preventDefault();
         }, true);
 
+        canvas.addEventListener('mouseup', (event) => {
+            if (event.defaultPrevented) return;
+
+            clampMouseClick(Math.floor(event.clientX - rect.left), Math.floor(event.clientY - rect.top));
+
+            event.preventDefault();
+        }, true);
+
         window.addEventListener("keyup", (event) => {
             if (event.defaultPrevented) return;
 
@@ -272,6 +341,7 @@
 
         function setCurrentState(currState)
         {
+            clearMouseMovement();
             currentState = currState;
             isStopped = false;
         }
