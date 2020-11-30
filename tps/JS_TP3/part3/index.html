@@ -26,26 +26,10 @@
             <ul>
 
                 <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1s;">
-                    <a href="#" id="up"><i class="fad fa-arrow-square-up"></i> Monter</a>
-                </li>
-                
-                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.1s;">
-                    <a href="#" id="down"><i class="fad fa-arrow-square-down"></i> Descendre</a>
-                </li>
-
-                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.2s;">
-                    <a href="#" id="shoot"><i class="fad fa-rectangle-wide"></i>Tirer</a>
-                </li>
-
-                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.3s;">
-                    <a href="#" id="stop"><i class="fad fa-level-down" style="transform: rotateZ(90deg);"></i>Arreter</a>
-                </li>
-
-                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.4s;">
                     <a href="#" id="reset"><i class="fad fa-undo"></i> Reinitialiser</a>
                 </li>
 
-                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.5s;">
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1.1s;">
                     <a href="/tps/JS_TP3/index.html"><i class="fad fa-arrow-left"></i> Retour - TP JS #3</a>
                 </li>
                 
@@ -53,7 +37,8 @@
         </div>
 
         <div class="col" style="display: flex; justify-content: center; align-items: center; padding: 1em;">
-            <canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
+            <!-- <canvas id="canvas" style="width: 100%; height: 100%;"></canvas> -->
+            <h4 style="color: white;">Coming soon...</h4>
         </div>
     </main>
 
@@ -62,6 +47,50 @@
     <script src="/public/js/particles.min.js"></script>
     <script src="/public/js/part.js"></script>
 
-    <script></script>
+    <script>
+
+        let canvas = document.querySelector('#canvas');
+
+        let rect;
+
+        let ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+
+        class Player
+        {
+            constructor(width, height, originOffsetX, originOffsetY, scale, srcPath, ctx)
+            {
+                this.ctx = ctx;
+
+                this.width = width;
+                this.height = height;
+
+                this.originOffsetX = originOffsetX;
+                this.originOffsetY = originOffsetY;
+
+                this.scale = scale;
+
+                this.sprite = new Image();
+                this.sprite.src = srcPath;
+            }
+
+            draw(x, y, scale = this.scale)
+            {
+                ctx.drawImage(
+                    this.sprite,
+                    this.width, this.height, this.width, this.height,
+                    x - this.originOffsetX * scale, y - this.originOffsetY * scale, this.width * scale, this.height * scale
+                );
+            }
+        }
+
+        window.addEventListener('load', () => {
+            rect = canvas.getBoundingClientRect();
+
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        });
+
+    </script>
 </body>
 </html>

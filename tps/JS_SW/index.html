@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <title>Technos WEB ENSSAT - TP JS FETCH</title>
+
+    <link rel="stylesheet" href="fullcalendar/main.min.css">
+    <link rel="stylesheet" href="/public/dist/fontawesome/all.min.css">
+    <link rel="stylesheet" href="/public/css/animate.min.css">
+    <link rel="stylesheet" href="/public/css/app.css">
+</head>
+<body style="background-color: #915c26; overflow-y: auto;">
+
+    <header>
+        <h1 class="animate__animated animate__fadeInDown">TP Technos WEB - ENSSAT - TP JS Services Workers</h1>
+    </header>
+
+    <hr class="animate__animated animate__fadeIn" style="animation-delay: .5s;">
+
+    <main>
+        <div class="col menu">
+
+            <h3 class="animate__animated animate__fadeIn" style="animation-delay: .75s;">Liste des parties :</h3>
+
+            <ul>
+
+                <li class="animate__animated animate__fadeInLeft" style="animation-delay: 1s;">
+                    <a href="/"><i class="fad fa-arrow-left"></i> Retour - Accueil</a>
+                </li>
+                
+            </ul>
+        </div>
+
+        <div class="col cal">
+            <pre>
+                <code id="calendar">
+
+                </code>
+            </pre>
+        </div>
+    </main>
+
+    <div id="particles-js" class="particles-container"></div>
+
+    <script src="/public/js/particles.min.js"></script>
+    <script src="/public/js/part.js"></script>
+
+    <script src="fullcalendar/main.min.js"></script>
+
+    <script>
+        const noCorsUrl = 'https://cors-anywhere.herokuapp.com/';
+
+        let calUrl = 'https://planning.univ-rennes1.fr/jsp/custom/modules/plannings/9EYlGR3a.shu';
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/tps/JS_SW/sw.js', { scope: '/tps/JS_SW/' }).then((reg) => {
+                // registration worked
+                console.log('Registration succeeded. Scope is ' + reg.scope);
+            }).catch((error) => {
+                // registration failed
+                console.log('Registration failed with ' + error);
+            });
+        };
+
+        fetch(noCorsUrl + calUrl, {method: 'GET'})
+            .then((resp) => {
+                return resp.text();
+            })
+            .then((text) => {
+                document.querySelector('#calendar').innerHTML = text;
+
+                /*
+                var calendarEl = document.getElementById('calendar');
+
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth'
+                });
+
+                calendar.render();
+                */
+            });
+        
+    </script>
+</body>
+</html>
